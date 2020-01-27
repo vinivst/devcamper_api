@@ -1,40 +1,118 @@
+const Bootcamp = require('../models/Bootcamp');
+
 // @desc        Get all bootcamps
 // @route       GET /api/v1/bootcamps
 // @access      Public
 exports.getBootcamps = (req, res, next) => {
-  res.status(200).json({ success: true, msg: 'Show all bootcamps' });
+  const bootcamps = Bootcamp.find()
+    .then(data => {
+      res.status(200).json({
+        success: true,
+        count: data.length,
+        data: data
+      });
+    })
+    .catch(err => {
+      res.status(400).json({
+        success: false,
+        error: err
+      });
+    });
 };
 
 // @desc        Get single bootcamp
 // @route       GET /api/v1/bootcamps/:id
 // @access      Public
 exports.getBootcamp = (req, res, next) => {
-  res
-    .status(200)
-    .json({ success: true, msg: `Show bootcamp ${req.params.id}` });
+  const bootcamp = Bootcamp.findById(req.params.id)
+    .then(data => {
+      if (!data) {
+        return res.status(400).json({
+          success: false,
+          data: 'None Bootcamp found'
+        });
+      }
+      res.status(200).json({
+        success: true,
+        data: data
+      });
+    })
+    .catch(err => {
+      res.status(400).json({
+        success: false,
+        error: err
+      });
+    });
 };
 
 // @desc        Create new bootcamp
 // @route       POST /api/v1/bootcamps
 // @access      Private
 exports.createBootcamp = (req, res, next) => {
-  res.status(200).json({ success: true, msg: 'Create new bootcamp' });
+  Bootcamp.create(req.body)
+    .then(data => {
+      res.status(201).json({
+        success: true,
+        data: data
+      });
+    })
+    .catch(err => {
+      res.status(400).json({
+        success: false,
+        error: err
+      });
+    });
 };
 
 // @desc        Update bootcamp
 // @route       PUT /api/v1/bootcamps/:id
 // @access      Private
 exports.updateBootcamp = (req, res, next) => {
-  res
-    .status(200)
-    .json({ success: true, msg: `Update bootcamp ${req.params.id}` });
+  Bootcamp.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true
+  })
+    .then(data => {
+      if (!data) {
+        return res.status(400).json({
+          success: false,
+          data: 'None Bootcamp found'
+        });
+      }
+      res.status(200).json({
+        success: true,
+        data: data
+      });
+    })
+    .catch(err => {
+      res.status(400).json({
+        success: false,
+        error: err
+      });
+    });
 };
 
 // @desc        Delete bootcamp
 // @route       DELETE /api/v1/bootcamps/:id
 // @access      Private
 exports.deleteBootcamp = (req, res, next) => {
-  res
-    .status(200)
-    .json({ success: true, msg: `Delete bootcamp ${req.params.id}` });
+  Bootcamp.findByIdAndDelete(req.params.id)
+    .then(data => {
+      if (!data) {
+        return res.status(400).json({
+          success: false,
+          data: 'None Bootcamp found'
+        });
+      }
+      res.status(200).json({
+        success: true,
+        data: data
+      });
+    })
+    .catch(err => {
+      res.status(400).json({
+        success: false,
+        error: err
+      });
+    });
 };
