@@ -1,3 +1,4 @@
+const ErrorResponse = require('../utils/errorResponse');
 const Bootcamp = require('../models/Bootcamp');
 
 // @desc        Get all bootcamps
@@ -13,10 +14,7 @@ exports.getBootcamps = (req, res, next) => {
       });
     })
     .catch(err => {
-      res.status(400).json({
-        success: false,
-        error: err
-      });
+      next(err);
     });
 };
 
@@ -27,10 +25,12 @@ exports.getBootcamp = (req, res, next) => {
   const bootcamp = Bootcamp.findById(req.params.id)
     .then(data => {
       if (!data) {
-        return res.status(400).json({
-          success: false,
-          data: 'None Bootcamp found'
-        });
+        return next(
+          new ErrorResponse(
+            `Bootcamp not found with id of ${req.params.id}`,
+            404
+          )
+        );
       }
       res.status(200).json({
         success: true,
@@ -38,10 +38,11 @@ exports.getBootcamp = (req, res, next) => {
       });
     })
     .catch(err => {
-      res.status(400).json({
+      /*res.status(400).json({
         success: false,
         error: err
-      });
+      });*/
+      next(err);
     });
 };
 
@@ -57,10 +58,7 @@ exports.createBootcamp = (req, res, next) => {
       });
     })
     .catch(err => {
-      res.status(400).json({
-        success: false,
-        error: err
-      });
+      next(err);
     });
 };
 
@@ -74,10 +72,12 @@ exports.updateBootcamp = (req, res, next) => {
   })
     .then(data => {
       if (!data) {
-        return res.status(400).json({
-          success: false,
-          data: 'None Bootcamp found'
-        });
+        return next(
+          new ErrorResponse(
+            `Bootcamp not found with id of ${req.params.id}`,
+            404
+          )
+        );
       }
       res.status(200).json({
         success: true,
@@ -85,10 +85,7 @@ exports.updateBootcamp = (req, res, next) => {
       });
     })
     .catch(err => {
-      res.status(400).json({
-        success: false,
-        error: err
-      });
+      next(err);
     });
 };
 
@@ -99,10 +96,12 @@ exports.deleteBootcamp = (req, res, next) => {
   Bootcamp.findByIdAndDelete(req.params.id)
     .then(data => {
       if (!data) {
-        return res.status(400).json({
-          success: false,
-          data: 'None Bootcamp found'
-        });
+        return next(
+          new ErrorResponse(
+            `Bootcamp not found with id of ${req.params.id}`,
+            404
+          )
+        );
       }
       res.status(200).json({
         success: true,
@@ -110,9 +109,6 @@ exports.deleteBootcamp = (req, res, next) => {
       });
     })
     .catch(err => {
-      res.status(400).json({
-        success: false,
-        error: err
-      });
+      next(err);
     });
 };
