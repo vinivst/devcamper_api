@@ -32,6 +32,7 @@ const importData = () => {
   Bootcamp.create(bootcamps)
     .then(data => {
       console.log('Bootcamps Imported...'.green.inverse);
+      //process.exit();
     })
     .catch(err => {
       console.log(err);
